@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HACKER-MD | PAIR - 41 CMDS</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Courier New',monospace}
+body{background:#000;color:#00ff00;min-height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
+canvas{position:fixed;top:0;left:0;z-index:0}
+.box{position:relative;z-index:5;border:2px solid #00ff00;padding:28px;width:92%;max-width:420px;background:rgba(0,0,0,.92);box-shadow:0 0 35px #00ff00, inset 0 0 15px rgba(0,255,0,0.1);border-radius:16px;backdrop-filter:blur(5px)}
+h1{text-align:center;font-size:32px;letter-spacing:4px;text-shadow:0 0 15px #00ff00, 0 0 30px #00ff00;animation:glow 2s infinite alternate}
+@keyframes glow{0%{text-shadow:0 0 10px #00ff00}100%{text-shadow:0 0 20px #00ff00,0 0 35px #00ff00}}
+.p{text-align:center;font-size:11px;color:#00ff00;margin:6px 0 18px;letter-spacing:1px}
+.badge{display:flex;justify-content:center;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.badge span{border:1px solid #00ff00;padding:3px 8px;font-size:9px;border-radius:20px;background:rgba(0,255,0,0.1)}
+.custom-select{position:relative;width:100%;margin:10px 0}
+.selected{width:100%;padding:13px 15px;background:rgba(0,0,0,0.8);border:1px solid #00ff00;color:#00ff00;border-radius:8px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-size:14px}
+.options{display:none;position:absolute;top:108%;left:0;width:100%;background:#000;border:1px solid #00ff00;border-radius:8px;max-height:280px;overflow-y:auto;z-index:99;box-shadow:0 0 25px #00ff00}
+.options div{padding:13px 15px;border-bottom:1px solid #002200;color:#00ff00;cursor:pointer;font-size:14px}
+.options div:hover{background:#001a00}
+.options div.active{background:#002200}
+input{width:100%;padding:14px 15px;margin:10px 0;background:rgba(0,0,0,0.8);border:1px solid #00ff00;color:#00ff00;border-radius:8px;outline:none;font-size:15px}
+input:focus{box-shadow:0 0 20px #00ff00}
+button{width:100%;padding:14px;background:linear-gradient(90deg,#00ff00,#00cc00);color:#000;border:none;font-weight:bold;font-size:16px;cursor:pointer;border-radius:8px;margin-top:10px;box-shadow:0 0 15px rgba(0,255,0,0.5);transition:0.3s}
+button:hover{background:#000;color:#00ff00;border:1px solid #00ff00;box-shadow:0 0 25px #00ff00;transform:scale(1.02)}
+.code{margin-top:16px;padding:18px;border:1px dashed #00ff00;text-align:center;font-size:26px;letter-spacing:6px;display:none;background:rgba(0,30,0,0.6);word-break:break-all;border-radius:8px;animation:codePulse 1.5s infinite}
+@keyframes codePulse{0%,100%{box-shadow:0 0 10px rgba(0,255,0,0.3)}50%{box-shadow:0 0 25px rgba(0,255,0,0.7)}}
+.footer{text-align:center;margin-top:18px;font-size:10px;color:#00aa00;letter-spacing:1px}
+.status{font-size:11px;text-align:center;margin-top:10px;color:#00ff00;background:rgba(0,30,0,0.5);padding:8px;border-radius:6px;border:1px solid rgba(0,255,0,0.3)}
+.code-rain{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:2;opacity:0.12}
+</style>
+</head>
+<body>
+
+<canvas id="c"></canvas>
+<canvas id="codeRain" class="code-rain"></canvas>
+
+<div class="box">
+<h1>HACKER-MD</h1>
+<div class="p">⚡ PROTOCOL: HACK ACTIVATED | 41 COMMANDS | PRIVATE ⚡</div>
+
+<div class="badge">
+<span>💀 HACKER-MD</span>
+<span>🔥 41 CMDS</span>
+</div>
+
+<div class="custom-select" id="serverBox">
+<div class="selected" id="selectedServer">SERVER-01 [ACTIVE - PING 9ms]</div>
+<div class="options" id="serverOptions">
+<div class="active" data-val="SERVER-01">SERVER-01 [ACTIVE]</div>
+<div data-val="SERVER-02">SERVER-02 [ACTIVE]</div>
+<div data-val="SERVER-03">SERVER-03 [ACTIVE]</div>
+<div data-val="SERVER-04">SERVER-04 [ACTIVE]</div>
+<div data-val="SERVER-05">SERVER-05 [ACTIVE]</div>
+<div data-val="SERVER-06">SERVER-06 [ACTIVE]</div>
+<div data-val="SERVER-07">SERVER-07 [ACTIVE]</div>
+<div data-val="SERVER-08">SERVER-08 [ACTIVE]</div>
+<div data-val="SERVER-09">SERVER-09 [ACTIVE]</div>
+<div data-val="SERVER-10">SERVER-10 [ACTIVE]</div>
+</div>
+</div>
+
+<div id="serverStatus" class="status">● SERVER-01 CONNECTED | SECURE | PING 12ms</div>
+
+<input id="num" type="text" placeholder="923XXXXXXXX - Only Pak Number" maxlength="12" inputmode="numeric">
+<button onclick="getCode()" id="pairBtn">💀 GET PAIR CODE - HACKER-MD</button>
+<div id="codeBox" class="code"></div>
+
+<div class="footer">
+POWER BY HACKER-MD | VERSION 1.0 [31 CMDS] 💀
+</div>
+</div>
+
+<script>
+// MATRIX RAIN
+const canvas=document.getElementById('c'),ctx=canvas.getContext('2d');
+canvas.width=innerWidth;canvas.height=innerHeight;
+let letters="HACKER-MD01💀🔥01".split(""),fs=14,drops=[];
+for(let x=0;x<canvas.width/fs;x++)drops[x]=Math.random()*-50;
+function draw(){
+ctx.fillStyle="rgba(0,0,0,0.05)";ctx.fillRect(0,0,canvas.width,canvas.height);
+ctx.fillStyle="#0F0";ctx.font=fs+"px monospace";
+for(let i=0;i<drops.length;i++){
+ctx.fillText(letters[Math.floor(Math.random()*letters.length)],i*fs,drops[i]*fs);
+if(drops[i]*fs>canvas.height&&Math.random()>0.975)drops[i]=0;
+drops[i]++
+}
+}
+setInterval(draw,35);
+
+// CODE RAIN
+const codeCanvas=document.getElementById('codeRain');
+const codeCtx=codeCanvas.getContext('2d');
+codeCanvas.width=innerWidth;codeCanvas.height=innerHeight;
+let codeWords=["const","let","async","await","function","pair","HACKER-MD",".menu",".kick",".tagall",".alive","31","{ }","=>","api/pair","requestPairingCode","💀"];
+let codeDrops=[];
+for(let i=0;i<80;i++)codeDrops.push({x:Math.random()*innerWidth,y:Math.random()*-500,speed:Math.random()*2.5+0.8,text:codeWords[Math.floor(Math.random()*codeWords.length)],size:Math.random()*3+10});
+function drawCodeRain(){
+codeCtx.clearRect(0,0,codeCanvas.width,codeCanvas.height);
+codeCtx.fillStyle="#00ff00";codeDrops.forEach(d=>{
+codeCtx.font=d.size+"px monospace";codeCtx.fillText(d.text,d.x,d.y);d.y+=d.speed;
+if(d.y>innerHeight){d.y=-20;d.x=Math.random()*innerWidth;d.text=codeWords[Math.floor(Math.random()*codeWords.length)]}
+});
+}
+setInterval(drawCodeRain,40);
+
+// SERVER SELECT
+let currentServer="SERVER-01";
+let sel=document.getElementById('selectedServer'),opts=document.getElementById('serverOptions');
+sel.onclick=()=>{opts.style.display=opts.style.display==='block'?'none':'block'};
+opts.querySelectorAll('div').forEach(d=>{
+d.onclick=()=>{
+opts.querySelectorAll('div').forEach(e=>e.classList.remove('active'));
+d.classList.add('active');currentServer=d.dataset.val;
+sel.innerText=d.innerText+" - PING "+Math.floor(Math.random()*15+6)+"ms";
+opts.style.display='none';
+document.getElementById('serverStatus').innerText='● '+currentServer+' CONNECTED | SECURE | PING '+Math.floor(Math.random()*20+8)+'ms';
+}});
+document.addEventListener('click',e=>{if(!document.getElementById('serverBox').contains(e.target))opts.style.display='none'});
+
+// PAIR CODE
+async function getCode(){
+let n=document.getElementById('num').value.replace(/[^0-9]/g,'');
+if(!/^923[0-9]{9}$/.test(n)){alert('Only Pakistani Number! 923XXXXXXXX 💀');return}
+let btn=document.getElementById('pairBtn');
+btn.innerText='⏳ GENERATING ON '+currentServer+'... 💀';btn.disabled=true;
+try{
+let res=await fetch('/api/pair?number='+n+'&server='+currentServer);
+let data=await res.json();
+let box=document.getElementById('codeBox');box.style.display='block';
+box.innerHTML=data.code?data.code+'<div style="font-size:10px;margin-top:8px">👆 COPY | WHATSAPP > LINKED DEVICES > LINK WITH PHONE NUMBER</div>':data.code||"ERROR";
+if(data.code)navigator.clipboard.writeText(data.code);
+}catch(e){document.getElementById('codeBox').style.display='block';document.getElementById('codeBox').innerText="SERVER BUSY, RETRY 💀";}
+btn.innerText='💀 GET PAIR CODE - HACKER-MD';btn.disabled=false;
+}
+window.onresize=()=>{canvas.width=innerWidth;canvas.height=innerHeight;codeCanvas.width=innerWidth;codeCanvas.height=innerHeight}
+</script>
+</body>
+</html>

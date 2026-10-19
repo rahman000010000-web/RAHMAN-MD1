@@ -1,0 +1,18 @@
+{
+  "name": "HACKER-MD",
+  "description": "POWER BY HACKER-MD 41 COMMANDS",
+  "keywords": ["hacker-md", "baileys", "41-commands"],
+  "stack": "heroku-22",
+  "buildpacks": [
+    { "url": "heroku/nodejs" },
+    { "url": "https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest" },
+    { "url": "https://github.com/DuckyTeam/heroku-buildpack-imagemagick" }
+  ],
+  "env": {
+    "SESSION_ID": { "description": "Session ID", "required": true },
+    "OWNER_NUMBER": { "description": "923xxxxxxxx", "required": true },
+    "PREFIX": { "description": "Prefix", "required": false, "value": "." },
+    "MODE": { "description": "private/public", "required": false, "value": "private" },
+    "BOT_NAME": { "description": "Bot Name", "required": false, "value": "HACKER-MD" }
+  }
+}
